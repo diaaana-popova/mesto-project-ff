@@ -1,4 +1,4 @@
-import { cardTemplate, openImagePopup } from '../index';
+import { cardTemplate } from '../index';
 
 function createCard(element, removeCard, likeCard, openImagePopup) {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
