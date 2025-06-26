@@ -85,4 +85,4 @@ function openImagePopup(imageData) {
     popupCaption.textContent = imageData.name;
 }
 
-export { placesItem, popups, cardTemplate, openImagePopup, nameInput, jobInput }
+export { cardTemplate }
