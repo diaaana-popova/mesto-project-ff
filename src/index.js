@@ -69,9 +69,14 @@ enableValidation();
 
 function renderLoading(isLoading, form) {
   const submitButton = form.querySelector('.popup__button');
-  const initialText = submitButton.textContent;
+  const initialText = 'Сохранить'
   const loadingText = 'Сохранение...'
-  submitButton.textContent = isLoading ? loadingText : initialText;
+  
+ if (isLoading) {
+    submitButton.textContent = loadingText;
+  } else {
+    submitButton.textContent = initialText;
+  }
 }
 
 addButton.addEventListener('click', function() {
