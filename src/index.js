@@ -1,39 +1,47 @@
 import './pages/index.css';
 import { createCard, removeCard, likeCard } from './components/card';
 import { openModal, closeModal } from './components/modal';
+import { initialCards } from './components/cards'
 import { enableValidation, clearValidation, formValidationConfig } from './components/validation';
 import { changeProfileInfo, getInitialCards, addNewCard, fetchInitialData, getProfileInfo, changeProfileImage } from './components/api';
 
 const cardTemplate = document.querySelector('#card-template').content;
 const placesItem = document.querySelector('.places__list');
-const popups = document.querySelectorAll('.popup');
 
 const editProfileForm = document.querySelector('[name="edit-profile"]');
 const nameInput = editProfileForm.querySelector('.popup__input_type_name');
 const jobInput = editProfileForm.querySelector('.popup__input_type_description');
+const formNewPlace = document.querySelector('[name="new-place"]');
+const placeInput = formNewPlace.querySelector('.popup__input_type_card-name');
+const linkInput = formNewPlace.querySelector('.popup__input_type_url');
+const editAvatar = document.querySelector('[name="new-avatar"]');
+const avatarInput = editAvatar.querySelector('.popup__input_type_url');
+
+const popups = document.querySelectorAll('.popup');
+const popupNewCard = document.querySelector('.popup_type_new-card');
+const popupEdit = document.querySelector('.popup_type_edit');
+const avatarPopup = document.querySelector('.popup_type_new-avatar');
+
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 const profileImage = document.querySelector('.profile__image');
 
-const formNewPlace = document.querySelector('[name="new-place"]');
-const placeInput = formNewPlace.querySelector('.popup__input_type_card-name');
-const linkInput = formNewPlace.querySelector('.popup__input_type_url');
-
-const popupNewCard = document.querySelector('.popup_type_new-card');
-const popupEdit = document.querySelector('.popup_type_edit');
 const editButton = document.querySelector('.profile__edit-button');
 const addButton = document.querySelector('.profile__add-button');
 const closeButtons = document.querySelectorAll('.popup__close');
-const avatarImage = document.querySelector('.profile__image');
-const avatarPopup = document.querySelector('.popup_type_new-avatar');
-const editAvatar = document.querySelector('[name="new-avatar"]');
-const avatarInput = editAvatar.querySelector('.popup__input_type_url');
+
+
+initialCards.forEach((cardData) => {
+    const card = createCard(cardData, removeCard, likeCard, openImagePopup);
+    placesItem.append(card);
+  }
+)
 
 fetchInitialData(getProfileInfo, getInitialCards)
     .then(([myId, cards]) => {
         return cards.forEach((cardData) => {
             const card = createCard(cardData, removeCard, likeCard, openImagePopup);
-            placesItem.append(card);
+            placesItem.prepend(card);
 
             const deleteButton = card.querySelector('.card__delete-button');
             if (cardData.owner._id === myId) {
@@ -79,7 +87,7 @@ editButton.addEventListener('click', function() {
   clearValidation(editProfileForm, formValidationConfig);
 });
 
-avatarImage.addEventListener('click', function() {
+profileImage.addEventListener('click', function() {
   openModal(avatarPopup);
 })
 
