@@ -7,6 +7,7 @@
   background-size: cover;
   background-position: center;
   margin: 0 29px 0 0;
+  position: relative;
 }
 
 @media screen and (max-width: 740px) {
@@ -19,4 +20,37 @@
   .profile__image {
     margin-right: 0;
   }
+}
+
+.profile__overlay {
+  display: none;
+  background-color: rgba(0, 0, 0, 0.8);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 100%;
+  position: absolute;
+  z-index: 1;
+
+}
+
+.profile__overlay-pencil {
+  display: none;
+  block-size: 26px;
+  position: absolute;
+  z-index: 2;
+  top: 40%;
+  left: 40%;
+
+}
+
+.profile__image:hover .profile__overlay {
+  display: block;
+  cursor: pointer;
+}
+
+.profile__image:hover .profile__overlay-pencil {
+  display: block;
+  cursor: pointer;
 }
