@@ -1,5 +1,3 @@
-import { profileTitle, profileDescription, profileImage } from '../index';
-
 const config = {
   baseUrl: 'https://nomoreparties.co/v1/wff-cohort-41',
   headers: {
@@ -26,15 +24,6 @@ const getProfileInfo = () => {
         console.log(res);
         return res;
     })
-    // .then((data) => {
-    //     title.textContent = data.name;
-    //     description.textContent = data.about;
-    //     image.setAttribute('style', `background-image: url(${data.avatar})`);
-    //     return data._id;
-    // })
-    // .catch((err) => {
-    //     console.log(err);
-    // })
 }
 
 const getInitialCards = () => {
@@ -45,11 +34,7 @@ const getInitialCards = () => {
         return getResponseData(res);
     })
     .then((res) => {
-        console.log(res);
         return res;
-    })
-    .catch((err) => {
-        console.log(err);
     })
 }
 
@@ -60,9 +45,6 @@ const fetchInitialData = (getProfileInfo, getInitialCards) => {
     ])
     .then((res) => {
         return res;
-    })
-    .catch((err) => {
-        console.log(err);
     })
 }
 
@@ -82,9 +64,6 @@ const changeProfileInfo = (newProfileInfo) => {
         console.log(res);
         return res;
     })
-    .catch((err) => {
-        console.log(err);
-    })
 }
 
 const addNewCard = (cardData) => {
@@ -102,9 +81,6 @@ const addNewCard = (cardData) => {
     .then((res) => {
         console.log(res);
         return res;
-    })
-    .catch((err) => {
-        console.log(err);
     })
 }
 
@@ -164,9 +140,6 @@ const changeProfileImage = (newProfileImage) => {
     .then((res) => {
         console.log(res);
         return res;
-    })
-    .catch((err) => {
-        console.log(err);
     })
 }
 

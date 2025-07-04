@@ -1,7 +1,7 @@
 import './pages/index.css';
 import { createCard, removeCard, likeCard } from './components/card';
 import { openModal, closeModal } from './components/modal';
-import { enableValidation, clearValidation, formValidationConfig } from './components/validation';
+import { enableValidation, clearValidation} from './components/validation';
 import { changeProfileInfo, getInitialCards, addNewCard, fetchInitialData, getProfileInfo, changeProfileImage } from './components/api';
 
 const cardTemplate = document.querySelector('#card-template').content;
@@ -29,6 +29,15 @@ const editButton = document.querySelector('.profile__edit-button');
 const addButton = document.querySelector('.profile__add-button');
 const closeButtons = document.querySelectorAll('.popup__close');
 
+const formValidationConfig = ({
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+}); 
+
 getProfileInfo()
     .then((data) => {
         profileTitle.textContent = data.name;
@@ -46,23 +55,10 @@ fetchInitialData(getProfileInfo, getInitialCards)
             const card = createCard(cardData, {
               removeCard,
               likeCard,
-              openImagePopup
+              openImagePopup, 
+              myId: profileInfo._id
             });
             placesItem.append(card);
-
-            const deleteButton = card.querySelector('.card__delete-button');
-            if (cardData.owner._id === profileInfo._id) {
-                console.log('true');
-                deleteButton.classList.add('card__delete-button_active');
-            }
-
-            const likeButton = card.querySelector('.card__like-button');
-            cardData.likes.forEach((elem) => {
-                if (elem._id === profileInfo._id) {
-                    likeButton.classList.add('card__like-button_is-active');
-                }
-            }
-            )
         })
     })
     .catch((err) => {
@@ -121,22 +117,21 @@ function editFormSubmit(evt) {
   const nameValue = nameInput.value;
   const jobValue = jobInput.value;
 
-  document.querySelector('.profile__title').textContent = nameValue;
-  document.querySelector('.profile__description').textContent = jobValue;
-
   changeProfileInfo({
     name: nameValue,
     about: jobValue
   })
     .then((res) => {
-      console.log('Профиль отредактирован', res)
+      console.log('Профиль отредактирован', res),
+      document.querySelector('.profile__title').textContent = nameValue,
+      document.querySelector('.profile__description').textContent = jobValue,
+      closeModal(popupEdit)
     })
     .catch((err) => {
       console.log('Ошибка при редактировании профиля', err)
     })
     .finally(() => {
-      renderLoading(false, editProfileForm),
-      closeModal(popupEdit)
+      renderLoading(false, editProfileForm)
     })
 }
 
@@ -152,18 +147,16 @@ function editProfileAvatar(evt) {
     avatar: avatarValue
   })
   .then((updatedImage) => {
-    profileImage.setAttribute('style', `background-image: url(${updatedImage.avatar})`);
+    console.log('Аватар отредактирован', updatedImage),
+    profileImage.setAttribute('style', `background-image: url(${updatedImage.avatar})`),
+    editAvatar.reset(),
+    closeModal(avatarPopup)
   })
-  .then((res) => {
-      console.log('Аватар отредактирован', res)
-    })
   .catch((err) => {
       console.log('Ошибка при редактировании аватара', err)
     })
   .finally(() => {
-    renderLoading(false, editAvatar),
-    editAvatar.reset(),
-    closeModal(avatarPopup)
+    renderLoading(false, editAvatar)
   })
 }
 
@@ -175,11 +168,6 @@ function imageFormSubmit(evt) {
   renderLoading(true, formNewPlace)
 
   const newPlaceArr = { name: placeInput.value, alt: placeInput.value, link: linkInput.value };
-  
-  const card = createCard(newPlaceArr, removeCard); 
-  placesItem.prepend(card);
-
-  clearValidation(formNewPlace, formValidationConfig);
 
   addNewCard({
     name: newPlaceArr.name,
@@ -187,14 +175,22 @@ function imageFormSubmit(evt) {
   })
   .then((res) => {
       console.log('Новая карточка создана', res)
+      const card = createCard(res, {
+        removeCard,
+        likeCard,
+        openImagePopup,
+        myId: res.owner._id
+      });
+      placesItem.prepend(card);
+
+      formNewPlace.reset(),
+      closeModal(popupNewCard)
     })
   .catch((err) => {
       console.log('Ошибка при создании новой карточки', err)
     })
   .finally(() => {
-    renderLoading(false, formNewPlace),
-    formNewPlace.reset(),
-    closeModal(popupNewCard)
+    renderLoading(false, formNewPlace)
   })
 }
 
@@ -210,4 +206,4 @@ function openImagePopup(imageData) {
     popupCaption.textContent = imageData.name;
 }
 
-export { cardTemplate, openImagePopup, placesItem, nameInput, jobInput, profileTitle, profileDescription, profileImage }
+export { cardTemplate, openImagePopup, placesItem, nameInput, jobInput, profileTitle, profileDescription, profileImage, formValidationConfig }
