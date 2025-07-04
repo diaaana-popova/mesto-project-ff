@@ -1,7 +1,6 @@
 import './pages/index.css';
 import { createCard, removeCard, likeCard } from './components/card';
 import { openModal, closeModal } from './components/modal';
-import { initialCards } from './components/cards'
 import { enableValidation, clearValidation, formValidationConfig } from './components/validation';
 import { changeProfileInfo, getInitialCards, addNewCard, fetchInitialData, getProfileInfo, changeProfileImage } from './components/api';
 
@@ -30,27 +29,36 @@ const editButton = document.querySelector('.profile__edit-button');
 const addButton = document.querySelector('.profile__add-button');
 const closeButtons = document.querySelectorAll('.popup__close');
 
-
-initialCards.forEach((cardData) => {
-    const card = createCard(cardData, removeCard, likeCard, openImagePopup);
-    placesItem.append(card);
-  }
-)
+getProfileInfo()
+    .then((data) => {
+        profileTitle.textContent = data.name;
+        profileDescription.textContent = data.about;
+        profileImage.setAttribute('style', `background-image: url(${data.avatar})`);
+        return data;
+    })
+    .catch((err) => {
+        console.log(err);
+    })
 
 fetchInitialData(getProfileInfo, getInitialCards)
-    .then(([myId, cards]) => {
+    .then(([profileInfo, cards]) => {
         return cards.forEach((cardData) => {
-            const card = createCard(cardData, removeCard, likeCard, openImagePopup);
-            placesItem.prepend(card);
+            const card = createCard(cardData, {
+              removeCard,
+              likeCard,
+              openImagePopup
+            });
+            placesItem.append(card);
 
             const deleteButton = card.querySelector('.card__delete-button');
-            if (cardData.owner._id === myId) {
+            if (cardData.owner._id === profileInfo._id) {
+                console.log('true');
                 deleteButton.classList.add('card__delete-button_active');
             }
 
             const likeButton = card.querySelector('.card__like-button');
             cardData.likes.forEach((elem) => {
-                if (elem._id === myId) {
+                if (elem._id === profileInfo._id) {
                     likeButton.classList.add('card__like-button_is-active');
                 }
             }

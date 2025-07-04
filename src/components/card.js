@@ -1,11 +1,13 @@
 import { cardTemplate } from '../index';
 import { deleteCard, putLikeCard, removeLike } from './api';
 
-function createCard(element, removeCard, likeCard, openImagePopup) {
+function createCard(element, { removeCard, likeCard, openImagePopup } ) {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
 
-  cardElement.querySelector('.card__image').src = element.link;
-  cardElement.querySelector('.card__image').alt = element.name;
+  const cardImage = cardElement.querySelector('.card__image');
+
+  cardImage.src = element.link;
+  cardImage.alt = element.name;
   cardElement.querySelector('.card__title').textContent = element.name;
 
   const likesCount = Array.isArray(element.likes) ? element.likes.length : 0;
@@ -14,17 +16,16 @@ function createCard(element, removeCard, likeCard, openImagePopup) {
   const deleteButton = cardElement.querySelector('.card__delete-button');
   const cardDescription = cardElement.querySelector('.card__description');
   const likeButton = cardDescription.querySelector('.card__like-button');
-  const cardImage = cardElement.querySelector('.card__image');
 
-  deleteButton.addEventListener('click', (evt) => removeCard(evt, element._id));
+  deleteButton.addEventListener('click', (evt) => removeCard(evt.target.closest('.places__item'), element._id));
   likeButton.addEventListener('click', (evt) => likeCard(evt, element._id));
   cardImage.addEventListener('click', () => openImagePopup(element));
 
   return cardElement;
 };
 
-function removeCard(evt, card) {
-  evt.target.closest('.places__item').remove();
+function removeCard(placesItem, card) {
+  placesItem.remove();
   deleteCard(card);
 }
 

@@ -8,40 +8,41 @@ const config = {
   }
 }
 
-const getProfileInfo = (title, description, image) => {
-    return fetch(`${config.baseUrl}/users/me`, {
-        headers: config.headers
-    })
-    .then(res => {
-        if (res.ok) {
+const getResponseData = (res) => {
+    if (res.ok) {
             return res.json();
         }
         return Promise.reject(`Ошибка: ${res.status}`);
+}
+
+const getProfileInfo = () => {
+    return fetch(`${config.baseUrl}/users/me`, {
+        headers: config.headers
+    })
+    .then((res) => {
+        return getResponseData(res);
     })
     .then((res) => {
         console.log(res);
         return res;
     })
-    .then((data) => {
-        title.textContent = data.name;
-        description.textContent = data.about;
-        image.setAttribute('style', `background-image: url(${data.avatar})`);
-        return data._id;
-    })
-    .catch((err) => {
-        console.log(err);
-    })
+    // .then((data) => {
+    //     title.textContent = data.name;
+    //     description.textContent = data.about;
+    //     image.setAttribute('style', `background-image: url(${data.avatar})`);
+    //     return data._id;
+    // })
+    // .catch((err) => {
+    //     console.log(err);
+    // })
 }
 
 const getInitialCards = () => {
     return fetch(`${config.baseUrl}/cards`, {
         headers: config.headers
     })
-    .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+    .then((res) => {
+        return getResponseData(res);
     })
     .then((res) => {
         console.log(res);
@@ -54,11 +55,11 @@ const getInitialCards = () => {
 
 const fetchInitialData = (getProfileInfo, getInitialCards) => {
     return Promise.all([
-        getProfileInfo(profileTitle, profileDescription, profileImage),
+        getProfileInfo(),
         getInitialCards()
     ])
     .then((res) => {
-        return res
+        return res;
     })
     .catch((err) => {
         console.log(err);
@@ -74,11 +75,8 @@ const changeProfileInfo = (newProfileInfo) => {
             about: newProfileInfo.about
         })
     })
-    .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+    .then((res) => {
+        return getResponseData(res);
     })
     .then((res) => {
         console.log(res);
@@ -98,11 +96,8 @@ const addNewCard = (cardData) => {
             link: cardData.link
         })
     })
-    .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+    .then((res) => {
+        return getResponseData(res);
     })
     .then((res) => {
         console.log(res);
@@ -118,11 +113,8 @@ const deleteCard = (cardId) => {
         method: 'DELETE',
         headers: config.headers
     })
-    .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+    .then((res) => {
+        return getResponseData(res);
     })
     .then((res) => {
         console.log(res);
@@ -135,11 +127,8 @@ const putLikeCard = (cardId) => {
         method: 'PUT',
         headers: config.headers,
     })
-    .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+    .then((res) => {
+        return getResponseData(res);
     })
     .then((res) => {
         console.log(res);
@@ -152,11 +141,8 @@ const removeLike = (cardId) => {
         method: 'DELETE',
         headers: config.headers
     })
-    .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+    .then((res) => {
+        return getResponseData(res);
     })
     .then((res) => {
         console.log(res);
@@ -172,11 +158,8 @@ const changeProfileImage = (newProfileImage) => {
             avatar: newProfileImage.avatar
         })
     })
-    .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+    .then((res) => {
+        return getResponseData(res);
     })
     .then((res) => {
         console.log(res);
