@@ -78,7 +78,6 @@ const clearValidation = (formElement, validationConfig) => {
         inputElement.textContent = '';
     })
     disableButton(buttonElement, validationConfig);
-    toggleButtonState(inputList, buttonElement);
 }
 
 export { enableValidation, clearValidation, formValidationConfig };

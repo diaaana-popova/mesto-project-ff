@@ -38,19 +38,11 @@ const formValidationConfig = ({
   errorClass: 'popup__error_visible'
 }); 
 
-getProfileInfo()
-    .then((data) => {
-        profileTitle.textContent = data.name;
-        profileDescription.textContent = data.about;
-        profileImage.setAttribute('style', `background-image: url(${data.avatar})`);
-        return data;
-    })
-    .catch((err) => {
-        console.log(err);
-    })
-
 fetchInitialData(getProfileInfo, getInitialCards)
     .then(([profileInfo, cards]) => {
+        profileTitle.textContent = profileInfo.name;
+        profileDescription.textContent = profileInfo.about;
+        profileImage.setAttribute('style', `background-image: url(${profileInfo.avatar})`);
         return cards.forEach((cardData) => {
             const card = createCard(cardData, {
               removeCard,
